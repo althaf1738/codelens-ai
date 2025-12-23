@@ -10,7 +10,7 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-412991?logo=openai&logoColor=white)](https://openai.com/)
 [![Claude](https://img.shields.io/badge/Claude-171321?logo=anthropic&logoColor=white)](https://www.anthropic.com/)
 
-# CodeLens AI — AI Code Reviewer (Next.js + FastAPI)
+# CodeLens AI — AI Code Reviewer
 
 CodeLens AI ingests a repository, parses it into AST chunks, embeds to Qdrant, and generates AI review findings at file or repo scope. The FastAPI backend handles parsing, chunking, embeddings, retrieval, and review. The Next.js frontend gives you upload, file tree browsing, code viewing with inline comments, and repo-level findings in a dark, GitHub-like UI.
 
