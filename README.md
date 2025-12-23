@@ -35,44 +35,53 @@ CodeLens AI ingests a repository, parses it into AST chunks, embeds to Qdrant, a
 
 ```mermaid
 flowchart LR
-  subgraph UI[Frontend (Next.js)]
-    U1[Upload / embed]
-    U2[Files / Code]
-    U3[Repo review]
+
+  subgraph UI["Frontend - Next.js"]
+    U1["Upload / Embed Repo"]
+    U2["Browse Files & Code"]
+    U3["Run Repo Review"]
   end
 
-  subgraph API[FastAPI]
-    A1[[/uploadRepo]]
-    A2[[/embedRepo or /embedFile]]
-    A3[[/reviewFile or /reviewRepo]]
-    A4[[/listProjects /listFiles /getFile]]
+  subgraph API["Backend API - FastAPI"]
+    A1["POST /uploadRepo"]
+    A2["POST /embedRepo or /embedFile"]
+    A3["POST /reviewFile or /reviewRepo"]
+    A4["GET /listProjects /listFiles /getFile"]
   end
 
-  subgraph Parsing[Parsing & Chunking]
-    P1[Tree-sitter AST chunker]
-    P2[Heuristic fallback]
+  subgraph Parsing["Parsing and Chunking"]
+    P1["Tree-sitter AST Chunker"]
+    P2["Heuristic Line Fallback"]
   end
 
-  subgraph Storage[Storage]
-    S1[SQLite projects/files/deps]
-    S2[Qdrant vectors + metadata]
+  subgraph Storage["Storage Layer"]
+    S1["SQLite - Projects Files Dependencies"]
+    S2["Qdrant - Vectors and Metadata"]
   end
 
-  subgraph LLM[LLM / Embeddings]
-    L1[Embeddings (Gemini/OpenAI)]
-    L2[Review gen (Gemini/OpenAI/Claude)]
-    L3[Local heuristic fallback]
+  subgraph LLM["LLM and Embeddings"]
+    L1["Embedding Model"]
+    L2["LLM Review Generator"]
+    L3["Heuristic Static Checks"]
   end
 
-  U1 --> A1 --> P1 --> A2 --> S2
+  U1 --> A1
+  A1 --> P1
+  P1 --> A2
+  A2 --> S2
   P1 --> S1
-  U2 --> A4 --> S1
+
+  U2 --> A4
+  A4 --> S1
+
   U2 --> A3
   U3 --> A3
+
   A3 --> S2
-  A3 --> L1 --> L2
-  L1 -.-> L3
+  A3 --> L1
+  L1 --> L2
   A3 --> L3
+
 ```
 
 ## Project layout
