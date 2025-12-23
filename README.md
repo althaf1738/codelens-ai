@@ -43,24 +43,24 @@ flowchart LR
 
     subgraph API[FastAPI]
         A1[/uploadRepo]
-        A2[/embedRepo, /embedFile]
-        A3[/reviewFile, /reviewRepo]
-        A4[/listProjects, /listFiles, /getFile]
+        A2[/embedRepo or /embedFile]
+        A3[/reviewFile or /reviewRepo]
+        A4[/listProjects /listFiles /getFile]
     end
 
     subgraph Parsing[Parsing & Chunking]
-        P1[Tree-sitter AST chunker\n(Python/JS/TS/Go/Java)]
+        P1[Tree-sitter AST chunker<br/>(Py/JS/TS/Go/Java)]
         P2[Heuristic fallback]
     end
 
     subgraph Storage[Storage]
-        S1[SQLite\nprojects/files/deps]
-        S2[Qdrant\nvectors + metadata]
+        S1[SQLite projects/files/deps]
+        S2[Qdrant vectors + metadata]
     end
 
     subgraph LLM[LLM / Embeddings]
-        L1[Embeddings\n(Gemini/OpenAI)]
-        L2[Review gen\n(Gemini/OpenAI/Claude)]
+        L1[Embeddings<br/>(Gemini/OpenAI)]
+        L2[Review gen<br/>(Gemini/OpenAI/Claude)]
         L3[Local heuristic fallback]
     end
 
