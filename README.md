@@ -35,44 +35,44 @@ CodeLens AI ingests a repository, parses it into AST chunks, embeds to Qdrant, a
 
 ```mermaid
 flowchart LR
-    subgraph UI[Frontend (Next.js)]
-        U1[Upload /embed trigger]
-        U2[Files / Code view]
-        U3[Repo review]
-    end
+  subgraph UI[Frontend (Next.js)]
+    U1[Upload / embed]
+    U2[Files / Code]
+    U3[Repo review]
+  end
 
-    subgraph API[FastAPI]
-        A1[/uploadRepo]
-        A2[/embedRepo or /embedFile]
-        A3[/reviewFile or /reviewRepo]
-        A4[/listProjects /listFiles /getFile]
-    end
+  subgraph API[FastAPI]
+    A1[[/uploadRepo]]
+    A2[[/embedRepo or /embedFile]]
+    A3[[/reviewFile or /reviewRepo]]
+    A4[[/listProjects /listFiles /getFile]]
+  end
 
-    subgraph Parsing[Parsing & Chunking]
-        P1[Tree-sitter AST chunker<br/>(Py/JS/TS/Go/Java)]
-        P2[Heuristic fallback]
-    end
+  subgraph Parsing[Parsing & Chunking]
+    P1[Tree-sitter AST chunker]
+    P2[Heuristic fallback]
+  end
 
-    subgraph Storage[Storage]
-        S1[SQLite projects/files/deps]
-        S2[Qdrant vectors + metadata]
-    end
+  subgraph Storage[Storage]
+    S1[SQLite projects/files/deps]
+    S2[Qdrant vectors + metadata]
+  end
 
-    subgraph LLM[LLM / Embeddings]
-        L1[Embeddings<br/>(Gemini/OpenAI)]
-        L2[Review gen<br/>(Gemini/OpenAI/Claude)]
-        L3[Local heuristic fallback]
-    end
+  subgraph LLM[LLM / Embeddings]
+    L1[Embeddings (Gemini/OpenAI)]
+    L2[Review gen (Gemini/OpenAI/Claude)]
+    L3[Local heuristic fallback]
+  end
 
-    U1 --> A1 --> P1 --> A2 --> S2
-    P1 --> S1
-    U2 --> A4 --> S1
-    U2 --> A3
-    U3 --> A3
-    A3 --> S2
-    A3 --> L1 --> L2
-    L1 -.fallback.-> L3
-    A3 --> L3
+  U1 --> A1 --> P1 --> A2 --> S2
+  P1 --> S1
+  U2 --> A4 --> S1
+  U2 --> A3
+  U3 --> A3
+  A3 --> S2
+  A3 --> L1 --> L2
+  L1 -.-> L3
+  A3 --> L3
 ```
 
 ## Project layout
