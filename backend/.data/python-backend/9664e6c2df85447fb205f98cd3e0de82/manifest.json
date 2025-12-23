@@ -1,0 +1,9 @@
+[
+  "test-1/README.MD",
+  "test-1/api/server.ts",
+  "test-1/auth/login.js",
+  "test-1/auth/token.js",
+  "test-1/config/settings.json",
+  "test-1/db/user_repo.py",
+  "test-1/utils/crypto.ts"
+]

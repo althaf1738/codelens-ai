@@ -1,0 +1,16 @@
+[
+  "__MACOSX/test-1/._README.MD",
+  "__MACOSX/test-1/api/._server.ts",
+  "__MACOSX/test-1/auth/._login.js",
+  "__MACOSX/test-1/auth/._token.js",
+  "__MACOSX/test-1/config/._settings.json",
+  "__MACOSX/test-1/db/._user_repo.py",
+  "__MACOSX/test-1/utils/._crypto.ts",
+  "test-1/README.MD",
+  "test-1/api/server.ts",
+  "test-1/auth/login.js",
+  "test-1/auth/token.js",
+  "test-1/config/settings.json",
+  "test-1/db/user_repo.py",
+  "test-1/utils/crypto.ts"
+]

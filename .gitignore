@@ -1,0 +1,16 @@
+node_modules
+.next
+.turbo
+.DS_Store
+dist
+out
+*.log
+/.env*
+/uploads
+/.data
+.venv
+__pycache__/
+*.pyc
+__MACOSX/
+.pytest_cache/
+.coverage

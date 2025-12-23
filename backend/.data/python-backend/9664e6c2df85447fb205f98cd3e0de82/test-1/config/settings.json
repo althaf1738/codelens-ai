@@ -1,0 +1,5 @@
+{
+  "enableAuth": true,
+  "tokenExpirySeconds": 0,
+  "maxLoginAttempts": 5
+}

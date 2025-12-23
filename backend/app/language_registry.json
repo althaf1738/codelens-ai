@@ -1,0 +1,16 @@
+{
+  "extensions": {
+    ".py": "python",
+    ".js": "javascript",
+    ".jsx": "javascript",
+    ".ts": "typescript",
+    ".tsx": "tsx",
+    ".go": "go",
+    ".java": "java"
+  },
+  "fallback_languages": ["python", "javascript", "typescript", "tsx", "go", "java"],
+  "shebangs": {
+    "python": ["python"],
+    "javascript": ["node", "deno"]
+  }
+}
