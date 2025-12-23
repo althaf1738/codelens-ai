@@ -18,6 +18,11 @@ class ReviewComment:
   severity: str
   summary: str
   recommendation: str
+  explanation: str = ""
+  suggestion: str = ""
+  optional_patch: str = ""
+  lines: Optional[List[int]] = None
+  cross_file: bool = False
 
 
 @dataclass
@@ -134,13 +139,14 @@ def generate_comments(query: str, context: str) -> List[ReviewComment]:
   """
   system_prompt = (
     "You are an AI code reviewer. Return JSON array under key 'comments'. "
-    "Each item: {file, line, severity (info|warning|error), summary, recommendation}."
+    "Each item: {file, line, lines (array), severity (info|warning|error|low|medium|high|critical), "
+    "summary, explanation, recommendation, suggestion, optional_patch, cross_file}."
   )
 
   if _llm_available():
     prompt = (
       f"{system_prompt}\n"
-      'Respond ONLY with JSON, e.g. {"comments":[{"file":"file.ts","line":12,"severity":"warning","summary":"...","recommendation":"..."}]}.\n'
+      'Respond ONLY with JSON, e.g. {"comments":[{"file":"file.ts","line":12,"lines":[12,13],"severity":"warning","summary":"...","explanation":"...","recommendation":"...","suggestion":"...","optional_patch":"...","cross_file":false}]}.\n'
       f"Query: {query}\n\nContext:\n{context}"
     )
     raw = generate_with_provider(prompt, system="")
@@ -154,6 +160,11 @@ def generate_comments(query: str, context: str) -> List[ReviewComment]:
             severity=item.get("severity", "info"),
             summary=item.get("summary", ""),
             recommendation=item.get("recommendation", ""),
+            explanation=item.get("explanation", ""),
+            suggestion=item.get("suggestion", item.get("recommendation", "")),
+            optional_patch=item.get("optional_patch", ""),
+            lines=[int(x) for x in item.get("lines", []) if isinstance(x, int)],
+            cross_file=bool(item.get("cross_file", False)),
           )
           for item in parsed.get("comments", [])
         ]

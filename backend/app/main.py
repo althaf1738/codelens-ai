@@ -149,7 +149,12 @@ async def review_file(body: ReviewRequest):
       "severity": comment.severity,
       "file": (comment.file if comment.file not in ["general", "unknown", None, ""] else body.path),
       "line": comment.line or 0,
+      "lines": comment.lines or [],
       "message": f"{comment.summary} {comment.recommendation}".strip(),
+      "explanation": comment.explanation,
+      "suggestion": comment.suggestion or comment.recommendation,
+      "optional_patch": comment.optional_patch,
+      "cross_file": comment.cross_file,
     }
     for comment in rag_result.comments
   ]

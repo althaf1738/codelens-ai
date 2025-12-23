@@ -1,4 +1,4 @@
-export type Severity = "info" | "warning" | "error";
+export type Severity = "info" | "warning" | "error" | "critical" | "high" | "medium" | "low" | string;
 
 export interface CodeChunk {
   id: string;
@@ -25,8 +25,13 @@ export interface Project {
 export interface ReviewFinding {
   severity: Severity;
   file: string;
-  line: number;
+  line?: number;
+  lines?: number[];
   message: string;
+  explanation?: string;
+  suggestion?: string;
+  optional_patch?: string;
+  cross_file?: boolean;
 }
 
 export interface ReviewResult {

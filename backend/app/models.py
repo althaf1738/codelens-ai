@@ -57,8 +57,14 @@ class ReviewRequest(BaseModel):
 
 class Finding(BaseModel):
   severity: str
-  line: int
+  line: Optional[int] = None
+  lines: Optional[List[int]] = None
+  file: Optional[str] = None
   message: str
+  explanation: Optional[str] = None
+  suggestion: Optional[str] = None
+  optional_patch: Optional[str] = None
+  cross_file: bool = False
 
 
 class ReviewResponse(BaseModel):

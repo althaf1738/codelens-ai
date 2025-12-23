@@ -24,7 +24,7 @@ export default function CodePage() {
   const defaultSeverities = ["critical", "high", "medium", "low", "error", "warning", "info"];
   const [activeLine, setActiveLine] = useState<number | null>(null);
   const [activeFindingLines, setActiveFindingLines] = useState<Set<number>>(new Set());
-  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch(`${backendUrl}/listProjects`)
@@ -251,15 +251,20 @@ export default function CodePage() {
                   {sev} ({items.length})
                 </div>
                 {items.map((f, idx) => {
+                  const key = `${sev}-${idx}`;
                   const lineRange: number[] = [];
-                  if (f.line) lineRange.push(f.line);
+                  if (f.lines && f.lines.length) {
+                    lineRange.push(...f.lines);
+                  } else if (f.line) {
+                    lineRange.push(f.line);
+                  }
                   return (
                     <div
                       key={`${sev}-${idx}`}
                       className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-left hover:border-blue-500"
                     >
                       <button
-                        onClick={() => scrollToLine(f.line || 1, lineRange)}
+                        onClick={() => scrollToLine((f.line || lineRange[0] || 1) as number, lineRange)}
                         className="w-full text-left"
                       >
                         <div className="flex items-center justify-between text-xs text-slate-400">
@@ -269,20 +274,22 @@ export default function CodePage() {
                       </span>
                       <span className="text-blue-400">Jump</span>
                     </div>
-                    <div className="text-sm mt-1">{f.message}</div>
+                    <div className="text-sm mt-1 text-slate-200">{f.message}</div>
+                    {f.suggestion && (
+                      <div className="mt-1 text-xs text-emerald-300">Suggestion: {f.suggestion}</div>
+                    )}
                   </button>
                   <button
                     onClick={() => {
-                      const key = `${sev}-${idx}`;
                       const next = new Set(expanded);
-                      next.has(idx) ? next.delete(idx) : next.add(idx);
+                      next.has(key) ? next.delete(key) : next.add(key);
                       setExpanded(next);
                     }}
                     className="mt-2 text-xs text-blue-400"
                   >
-                    {expanded.has(idx) ? "Hide details" : "Show details"}
+                    {expanded.has(key) ? "Hide details" : "Show details"}
                   </button>
-                      {expanded.has(idx) && (
+                      {expanded.has(key) && (
                         <div className="mt-2 space-y-2 text-sm text-slate-300">
                           {f.explanation && <p className="text-slate-300">Explanation: {f.explanation}</p>}
                           {f.suggestion && <p className="text-emerald-300">Suggestion: {f.suggestion}</p>}

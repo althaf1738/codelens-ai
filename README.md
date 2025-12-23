@@ -13,7 +13,12 @@
 [![Claude](https://img.shields.io/badge/Claude-171321?logo=anthropic&logoColor=white)](https://www.anthropic.com/)
 
 
-CodeLens AI ingests a repository, parses it into AST chunks, embeds to Qdrant, and generates AI review findings at file or repo scope. The FastAPI backend handles parsing, chunking, embeddings, retrieval, and review. The Next.js frontend gives you upload, file tree browsing, code viewing with inline comments, and repo-level findings in a dark, GitHub-like UI.
+CodeLens AI is an AI-powered code review system that performs file-level and repository-level analysis using a retrieval-augmented generation (RAG) pipeline, AST-aware parsing, and dependency-graph-based context expansion.
+
+Unlike simple LLM wrappers that review files in isolation, CodeLens AI ingests an entire repository, builds a semantic and structural understanding of the codebase, and generates actionable, structured review findings that can span multiple files and layers of the system.
+
+The platform is designed to mirror how modern code intelligence tools operate in production:
+logic lives in retrieval, static analysis, and data modeling, while prompts remain small, stable, and schema-driven.
 
 ## Highlights
 - Upload a repo archive and auto-embed everything
@@ -24,6 +29,62 @@ CodeLens AI ingests a repository, parses it into AST chunks, embeds to Qdrant, a
 - SQLite metadata (projects, files, dependency edges)
 - Dark UI with syntax highlighting, jump-to-line, and grouped severities
 - Pluggable LLM/embedding providers via env (Gemini, OpenAI, Claude)
+
+## What CodeLens AI Does
+
+CodeLens AI is an AI-powered code review system designed to analyze entire repositories, not just individual files. It combines static analysis, dependency-aware retrieval, and large language models to surface high-signal issues with precise file and line references.
+
+### Repository Ingestion
+- Ingests a repository archive (ZIP or local upload)
+- Applies strict filtering to exclude:
+  - vendor directories (`node_modules`, `.venv`, `.git`)
+  - build artifacts (`dist`, `build`, `.next`, `out`)
+  - system metadata and large binaries
+- Enforces file size limits to keep analysis efficient and deterministic
+
+### Parsing and Chunking
+- Parses source files into **semantic AST chunks** using Tree-sitter:
+  - classes
+  - functions
+  - methods / blocks
+- Supports Python, JavaScript, TypeScript/TSX, Go, and Java
+- Falls back to heuristic, line-based chunking when AST parsing fails
+- Preserves byte-accurate line spans for precise navigation and highlighting
+
+### Dependency Graph Construction
+- Builds a file-level dependency graph from import relationships
+- Uses the graph to understand cross-file execution flow
+- Expands review context to include dependency neighbors during analysis
+
+### Embeddings and Storage
+- Embeds code chunks into a vector store (Qdrant)
+- Stores rich metadata with each embedding:
+  - file path
+  - language
+  - start and end line numbers
+- Uses UUID-based identifiers to decouple storage from file layout
+
+### Review and Analysis (RAG Pipeline)
+- Performs both **file-level** and **repo-level** reviews
+- Combines multiple retrieval strategies:
+  - semantic similarity search
+  - dependency-aware expansion
+  - deterministic coverage heuristics to avoid blind spots
+- Runs heuristic and static checks alongside LLM reasoning for higher recall
+- Produces structured JSON findings with:
+  - severity (CRITICAL, HIGH, MEDIUM, LOW)
+  - affected files and line ranges
+  - cross-file awareness
+  - clear explanations and remediation guidance
+
+### Developer-Focused UI
+- Presents results in a developer-friendly interface:
+  - file tree navigation
+  - syntax-highlighted code viewer
+  - jump-to-line and cross-file linking
+  - grouped findings by severity and scope
+- Supports both targeted file review and holistic repository review workflows
+
 
 ## Architecture
 - **Frontend (Next.js/React)**: Upload flow (`/upload`), file tree (`/files`), file review (`/code` with inline comments and jump-to-line), repo review (`/repo-review` with preview pane), dark theme with syntax highlighting.
@@ -152,10 +213,8 @@ cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Env (examples)
-export QDRANT_URL=http://localhost:6333          # optional; unset to stay local
-# export GOOGLE_API_KEY=your_gemini_key          # optional; enables Gemini
-# export STORAGE_DIR=.data/python-backend        # optional override
+# Optional: load env automatically
+cp .env.example .env
 
 uvicorn app.main:app --reload
 ```
