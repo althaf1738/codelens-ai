@@ -8,6 +8,8 @@ out
 /.env*
 /uploads
 /.data
+.data/
+data/
 .venv
 __pycache__/
 *.pyc
