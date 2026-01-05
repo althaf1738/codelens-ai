@@ -85,8 +85,24 @@ CodeLens AI is an AI-powered code review system designed to analyze entire repos
   - grouped findings by severity and scope
 - Supports both targeted file review and holistic repository review workflows
 
+## Demo Screenshots
+
 ### Repository Upload & Indexing
-![Repository Upload](docs/screenshots/file-browser.png)
+![Repository Upload](docs/screenshots/upload.png)
+
+### File Browser & Code Viewer
+![File Browser](docs/screenshots/file-browser.png)
+
+![File Browser](docs/screenshots/file-tree.png)
+
+
+### File-Level Review with Inline Findings
+![File Review](docs/screenshots/file-review.png)
+
+### Repo-Level Review (Cross-File Issues)
+![Repo Review](docs/screenshots/repo-review.png)
+
+
 
 ## Architecture
 - **Frontend (Next.js/React)**: Upload flow (`/upload`), file tree (`/files`), file review (`/code` with inline comments and jump-to-line), repo review (`/repo-review` with preview pane), dark theme with syntax highlighting.
